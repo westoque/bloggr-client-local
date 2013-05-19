@@ -10,29 +10,27 @@
 <body>
 
   <script type="text/x-handlebars" data-template-name="calendar-view">
-    <div class="calendar-header">
-      <div style="display: inline-block;">LEFT</div>
-      <div style="display: inline-block;">MONTH_NAME</div>
-      <div style="display: inline-block;">RIGHT</div>
-    </div>
-    <div class="calendar-body">
-      <div>1</div>
-      <div>2</div>
-      <div>3</div>
+    <button {{action incrementMonth}}>Left</button>
+    <div style="width: 80px; display: inline-block;">{{currentMonthName}}</div>
+    <div style="width: 50px; display: inline-block;">{{currentYear}}</div>
+    <button {{action decrementMonth}}>Right</button>
+    <div style="width: 170px;">
+     {{#each daysInMonth}}
+       <div style="cursor: pointer; display: inline-block; width: 20px; height: 20px;">
+         {{view App.CalendarDayView}}
+       </div>
+     {{/each}}
     </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="date-field-view">
+    <div style="display: inline-block;">
+      {{view view.textField}}
+    </div>
+    <div style="display: inline-block;">
+      {{#view view.picker}}Trigger{{/view}}
+    </div>
     <div>
-      <div style="display: inline-block;">
-        {{view view.textField}}
-      </div>
-      <div style="display: inline-block;">
-        {{#view view.picker}}Trigger{{/view}}
-      </div>
-      <div>
-        {{view view.calendar}}
-      </div>
     </div>
   </script>
 

@@ -14,9 +14,24 @@ App.Router.map(function() {
   });
 });
 
-App.DateFieldView = Ember.View.extend({
+App.DateFieldView = Ember.ContainerView.extend({
 
-  templateName: 'date-field-view',
+  init: function() {
+    this._super();
+
+    var self = this;
+    var calendarController = App.CalendarController.create();
+    calendarController.addObserver('currentDate', function() {
+      self.textField.set('value', (this.get('currentMonth') + 1) + '/' + this.get('currentDate') + '/' + this.get('currentYear'));
+      self.textField.$().focus();
+    })
+
+    this.pushObject(App.CalendarView.create({
+      controller: calendarController
+    }));
+  },
+
+  childViews: ['textField'],
 
   textField: Ember.TextField.extend({
 
@@ -49,18 +64,6 @@ App.DateFieldView = Ember.View.extend({
     click: function() {
       this.parentView.calendar.show();
     }
-  }),
-
-  calendar: Ember.View.extend({
-
-    monthName: 'hello',
-
-    templateName: 'calendar-view',
-
-    _daysInMonth: function(month,year) {
-      return new Date(year, month, 0).getDate();
-    }
-
   })
 
 });
@@ -131,4 +134,69 @@ Ember.Handlebars.registerBoundHelper('markdown', function(input) {
 
 Ember.Handlebars.registerBoundHelper('date', function(date) {
   return moment(date).fromNow();
+});
+
+
+//===================================================================
+
+var MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December" ];
+
+App.CalendarView = Ember.View.extend({
+  templateName: 'calendar-view'
+});
+
+App.CalendarDayView = Ember.View.extend({
+  template: Ember.Handlebars.compile('{{this}}'),
+
+  click: function(evt) {
+    var date = parseInt(evt.target.innerText);
+    this.get('controller').send('selectDate', date);
+  }
+})
+
+App.CalendarController = Ember.ObjectController.extend({
+  incrementMonth: function() {
+    var month = this.get('currentMonth');
+    if (month === 0) {
+      this.set('currentMonth', 11);
+      this.decrementProperty('currentYear');
+    } else {
+      this.decrementProperty('currentMonth');
+    }
+  },
+
+  decrementMonth: function() {
+    var month = this.get('currentMonth');
+    if (month === 11) {
+      this.set('currentMonth', 0);
+      this.incrementProperty('currentYear');
+    } else {
+      this.incrementProperty('currentMonth');
+    }
+  },
+
+  currentDate: 1,
+
+  currentYear: new Date().getFullYear(),
+
+  currentMonth: new Date().getMonth(),
+
+  selectDate: function(date) {
+    this.set('currentDate', date);
+  },
+
+  currentMonthName: function() {
+    return MONTH_NAMES[this.get('currentMonth')];
+  }.property('currentMonth'),
+
+  daysInMonth: function() {
+    var date = this.get('date');
+    var noOfDays = new Date(this.get('currentYear'), this.get('currentMonth') + 1, 0).getDate();
+    var days = [];
+    for (var i = 0; i < noOfDays; i += 1) {
+      days.push(i + 1);
+    }
+    return days;
+  }.property('currentMonth')
 });
