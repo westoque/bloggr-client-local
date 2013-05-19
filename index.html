@@ -9,6 +9,33 @@
 </head>
 <body>
 
+  <script type="text/x-handlebars" data-template-name="calendar-view">
+    <div class="calendar-header">
+      <div style="display: inline-block;">LEFT</div>
+      <div style="display: inline-block;">MONTH_NAME</div>
+      <div style="display: inline-block;">RIGHT</div>
+    </div>
+    <div class="calendar-body">
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="date-field-view">
+    <div>
+      <div style="display: inline-block;">
+        {{view view.textField}}
+      </div>
+      <div style="display: inline-block;">
+        {{#view view.picker}}Trigger{{/view}}
+      </div>
+      <div>
+        {{view view.calendar}}
+      </div>
+    </div>
+  </script>
+
   <script type="text/x-handlebars">
     <div class="navbar">
       <div class="navbar-inner">
@@ -70,6 +97,7 @@
     <p>{{view Ember.TextField valueBinding='title'}}</p>
     <p>{{view Ember.TextArea valueBinding='intro'}}</p>
     <p>{{view Ember.TextArea valueBinding='extended'}}</p>
+    <p>{{view App.DateFieldView valueBinding='publishedAt'}}</p>
     <button {{action 'doneEditing'}}>Done</button>
   </script>
 

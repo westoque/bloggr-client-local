@@ -2,9 +2,7 @@ App = Ember.Application.create({});
 
 App.Store = DS.Store.extend({
   revision: 12,
-  adapter: DS.LSAdapter.create({
-    namespace: 'bloggr-client'
-  })
+  adapter: DS.FixtureAdapter
 });
 
 App.Router.map(function() {
@@ -14,6 +12,57 @@ App.Router.map(function() {
       this.route('edit');
     });
   });
+});
+
+App.DateFieldView = Ember.View.extend({
+
+  templateName: 'date-field-view',
+
+  textField: Ember.TextField.extend({
+
+    value: function() {
+      var date = this.get('parentView').get('value');
+      return this.formatDate(date);
+    }.property(),
+
+    focusOut: function() {
+      var parentView = this.get('parentView');
+      var date = new Date(this.get('value'));
+
+      if (isNaN(date)) {
+        date = parentView.get('value');
+        this.set('value', this.formatDate(date));
+      }
+      else {
+        parentView.set('value', date);
+        this.set('value', this.formatDate(date));
+      }
+    },
+
+    formatDate: function(date) {
+      return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+    }
+
+  }),
+
+  picker: Ember.Button.extend({
+    click: function() {
+      this.parentView.calendar.show();
+    }
+  }),
+
+  calendar: Ember.View.extend({
+
+    monthName: 'hello',
+
+    templateName: 'calendar-view',
+
+    _daysInMonth: function(month,year) {
+      return new Date(year, month, 0).getDate();
+    }
+
+  })
+
 });
 
 App.PostEditRoute = Ember.Route.extend({
@@ -65,14 +114,14 @@ App.Post = DS.Model.extend({
   publishedAt: attr('date')
 });
 
-//App.Post.FIXTURES = [{
-  //id: 1,
-  //title: 'The Sexy Beast',
-  //author: 'Dan Cohen',
-  //intro: 'Whats up friends!',
-  //extended: 'Yoyoyo!',
-  //publishedAt: new Date()
-//}];
+App.Post.FIXTURES = [{
+  id: 1,
+  title: 'The Unknown',
+  author: 'Dan Cohen',
+  intro: 'What is the unknown?',
+  extended: 'This is amazing!',
+  publishedAt: new Date(),
+}];
 
 var showdown = new Showdown.converter();
 
