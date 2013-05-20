@@ -8,9 +8,8 @@ App.Store = DS.Store.extend({
 App.Router.map(function() {
   this.resource('about');
   this.resource('posts', function() {
-    this.resource('post', {path: ':post_id'}, function() {
-      this.route('edit');
-    });
+    this.route('show', {path: '/:post_id'})
+    this.route('edit', {path: '/:post_id/edit'});
   });
 });
 
@@ -69,19 +68,27 @@ App.DateFieldView = Ember.ContainerView.extend({
 
 });
 
-App.PostEditRoute = Ember.Route.extend({
+App.PostsEditRoute = Ember.Route.extend({
 
   model: function(params) {
-    return this.modelFor('post');
+    return App.Post.find(params.post_id);
   }
 
 });
 
-App.PostEditController = Ember.ObjectController.extend({
+App.PostsShowRoute = Ember.Route.extend({
+
+  model: function(params) {
+    return App.Post.find(params.post_id);
+  }
+
+});
+
+App.PostsEditController = Ember.ObjectController.extend({
 
   doneEditing: function() {
     this.get('store').commit();
-    this.transitionToRoute('post', this.content);
+    this.transitionToRoute('posts.show', this.content);
   }
 
 });
@@ -106,6 +113,9 @@ App.PostsRoute = Ember.Route.extend({
   model: function() {
     return App.Post.find();
   }
+});
+
+App.PostsController = Ember.Controller.extend({
 });
 
 var attr = DS.attr;
