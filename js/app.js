@@ -58,12 +58,6 @@ App.DateFieldView = Ember.ContainerView.extend({
       return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
     }
 
-  }),
-
-  picker: Ember.Button.extend({
-    click: function() {
-      this.parentView.calendar.show();
-    }
   })
 
 });
@@ -143,17 +137,15 @@ var MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December" ];
 
 App.CalendarView = Ember.View.extend({
-  templateName: 'calendar-view'
+  templateName: 'calendar-view',
+
+  calendarDayView: Ember.View.extend({
+    click: function(evt) {
+      var date = parseInt(evt.target.innerText);
+      this.get('controller').send('selectDate', date);
+    }
+  })
 });
-
-App.CalendarDayView = Ember.View.extend({
-  template: Ember.Handlebars.compile('{{this}}'),
-
-  click: function(evt) {
-    var date = parseInt(evt.target.innerText);
-    this.get('controller').send('selectDate', date);
-  }
-})
 
 App.CalendarController = Ember.ObjectController.extend({
   incrementMonth: function() {
