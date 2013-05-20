@@ -20,21 +20,17 @@ App.DateFieldView = Ember.ContainerView.extend({
     this._super();
 
     var self = this;
-    var calendarController = App.CalendarController.create();
-    calendarController.addObserver('currentDate', function() {
+    this.calendarController = App.CalendarController.create();
+    this.calendarController.addObserver('currentDate', function() {
       self.textField.set('value', (this.get('currentMonth') + 1) + '/' + this.get('currentDate') + '/' + this.get('currentYear'));
       self.textField.$().focus();
     })
-
-    this.pushObject(App.CalendarView.create({
-      controller: calendarController
-    }));
+    this.pushObject(App.CalendarView.create({controller: this.calendarController}));
   },
 
-  childViews: ['textField'],
+  childViews: ['textField', 'triggerView'],
 
   textField: Ember.TextField.extend({
-
     value: function() {
       var date = this.get('parentView').get('value');
       return this.formatDate(date);
@@ -57,7 +53,18 @@ App.DateFieldView = Ember.ContainerView.extend({
     formatDate: function(date) {
       return (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
     }
+  }),
 
+  triggerView: Ember.View.extend({
+    tagName: 'button',
+
+    template: Ember.Handlebars.compile('TRIGGER'),
+
+    click: function() {
+      var controller = this.get('parentView').get('calendarController');
+      var isShown    = controller.get('isShown');
+      controller.set('isShown', !isShown);
+    }
   })
 
 });
@@ -168,6 +175,8 @@ App.CalendarController = Ember.ObjectController.extend({
     }
   },
 
+  isShown: false,
+
   currentDate: 1,
 
   currentYear: new Date().getFullYear(),
@@ -176,6 +185,7 @@ App.CalendarController = Ember.ObjectController.extend({
 
   selectDate: function(date) {
     this.set('currentDate', date);
+    this.set('isShown', false);
   },
 
   currentMonthName: function() {

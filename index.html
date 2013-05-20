@@ -10,17 +10,19 @@
 <body>
 
   <script type="text/x-handlebars" data-template-name="calendar-view">
-    <button {{action incrementMonth}}>Left</button>
-    <div style="width: 80px; display: inline-block;">{{currentMonthName}}</div>
-    <div style="width: 50px; display: inline-block;">{{currentYear}}</div>
-    <button {{action decrementMonth}}>Right</button>
-    <div style="width: 170px;">
-     {{#each daysInMonth}}
-       <div style="cursor: pointer; display: inline-block; width: 20px; height: 20px;">
-         <div {{action selectDate this}}>{{this}}</div>
-       </div>
-     {{/each}}
-    </div>
+    {{#if isShown}}
+      <button {{action incrementMonth}}>Left</button>
+      <div style="width: 80px; display: inline-block;">{{currentMonthName}}</div>
+      <div style="width: 50px; display: inline-block;">{{currentYear}}</div>
+      <button {{action decrementMonth}}>Right</button>
+      <div style="width: 170px;">
+       {{#each daysInMonth}}
+         <div style="cursor: pointer; display: inline-block; width: 20px; height: 20px;">
+           <div {{action selectDate this}}>{{this}}</div>
+         </div>
+       {{/each}}
+      </div>
+    {{/if}}
   </script>
 
   <script type="text/x-handlebars" data-template-name="date-field-view">
