@@ -8,16 +8,38 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <style>
+    .current-month-name {
+      width: 80px;
+      display: inline-block;
+    }
+
+    .current-year {
+      width: 50px;
+      display: inline-block;
+    }
+
+    .days-in-month-container {
+      width: 170px;
+    }
+
+    .days-in-month-item {
+      cursor: pointer;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+  </style>
 
   <script type="text/x-handlebars" data-template-name="calendar-view">
     {{#if isShown}}
       <button {{action incrementMonth}}>Left</button>
-      <div style="width: 80px; display: inline-block;">{{currentMonthName}}</div>
-      <div style="width: 50px; display: inline-block;">{{currentYear}}</div>
+      <div class="current-month-name">{{currentMonthName}}</div>
+      <div class="current-year">{{currentYear}}</div>
       <button {{action decrementMonth}}>Right</button>
-      <div style="width: 170px;">
+      <div class="days-in-month-container">
        {{#each daysInMonth}}
-         <div style="cursor: pointer; display: inline-block; width: 20px; height: 20px;">
+         <div class="days-in-month-item">
            <div {{action selectDate this}}>{{this}}</div>
          </div>
        {{/each}}
