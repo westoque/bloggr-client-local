@@ -39,8 +39,8 @@
       <button {{action decrementMonth}}>Right</button>
       <div class="days-in-month-container">
        {{#each daysInMonth}}
-         <div class="days-in-month-item">
-           <div {{action selectDate this}}>{{this}}</div>
+         <div class="days-in-month-item" {{action selectDate this}}>
+           {{unbound this}}
          </div>
        {{/each}}
       </div>
